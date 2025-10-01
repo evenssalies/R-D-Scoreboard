@@ -6,5 +6,5 @@ Cite as: Salies, E., 2025, Section 6 - La compétitivité hors coût, Code & Dat
 
 Raw data sources (author) 
 
-- EU R&D investment Scoreboard (EC ...): name.xlsx
+- EU R&D investment Scoreboard (European Commission, Joint Research Centre): name.xlsx
 - Countries information (Salies, E.): countries.dta
