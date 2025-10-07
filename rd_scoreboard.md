@@ -8,7 +8,7 @@ Si la population d'intérêt est toutes les entreprises de R&D dans le monde, al
 
 - D'autre part, à cause de la règle de sélection des entreprises, le *Scoreboard* n'exclut aucune grande entreprise de R&D. En effet, par construction, les entreprises du *Scoreboard* sont sélectionnées à l'issue d'un classement des entreprises de R&D du monde entier. Le monde est découpé en régions (CN, EU, JP, US et ROW). Les entreprises dont le siège est dans l'Union européenne (EU) sont d'abord classées par ordre de niveau de R&D décroissant, puis ne sont retenues que les 1000 premières. C'est la même chose pour les entreprises non-européennes, mais ce sont les 1500 premières qui sont retenues. Par conséquent, en 2023, on ne trouve pas de dépenses inférieures à 5 millions d'&euro; pour les &Eacute;tats-Unis (2 millions dans le cas France, 35 dans le cas de la Chine, etc.).
 
-En lien avec ce dernier point, on observe que la R&D est concentrée dans les grandes entreprises.[^1] En 2023, le top 10 % représente 69,7 % (785 milliards d'&euro;)) du financement mondial par les entreprises.
+En lien avec ce dernier point, on observe que la R&D est concentrée dans les grandes entreprises.[^1] En 2023, le top 10 % représente 69,7 % (785 milliards d'&euro;) du financement mondial par les entreprises.
 
 [^1]: Nindl, E., Napolitano, L., Confraria, H., Rentocchini, F., Fako, P., Gavigan, J., Tuebke, A. et al., 2024, The 2024 EU Industrial R&D Investment Scoreboard, Publications Office of the European Union, 145 p.
 
