@@ -1,12 +1,11 @@
-## La base de données EU R&D Investment Scoreboard
+## Qu'est-ce que la base de données *EU R&D Investment Scoreboard* ?
 
 La base de données *EU R&D Investment Scoreboard* (*Scoreboard R&D* ou *Scoreboard* par la suite) couvre la population mondiale des entreprises du secteur privé réalisant des activités de R&D.[^1] La base est <ins>non-exhaustive</ins>. Une variable importante de la base est le montant de R&D financée, qui correspond aux dépenses comptabilisées en frais plus celles activées. Les autres variables sont notamment le nom de l'entreprise, le pays du siège, l'année d'observation, le secteur NACE (rév. 2),[^2] etc. 
 
 ### L'exhaustivité de la base augmente avec le périmètre géographique
 
 Le *Scoreboard* n'est pas exhaustif pour plusieurs raisons :
-
-- Ne sont incluses que les entreprises qui financent un certain montant de R&D (en 2023, les montants les plus faibles sont de quelques centaines de milliers d'&euro;). Le <ins>défaut de couverture</ins> des petites entreprises est important. En 2023, on ne trouve pas de montant de R&D inférieur à 5 millions d'&euro; pour les &Eacute;tats-Unis, 2 millions pour la France, 35 millions pour la Chine, etc. Il n'y a pas de montant minimum fixé *a priori*, mais une règle de sélection. Les entreprises sont sélectionnées sur la base du rang qu'elles occupent dans la distribution des dépenses de R&D. Les entreprises sont classées par ordre de niveau de R&D croissant, puis ne sont retenues que les $n$ dernières ($n=1000$ en ce qui concerne l'Europe). C'est la même chose pour les entreprises non-européennes, mais $n=1500$. 
+- Ne sont incluses que les entreprises qui financent un certain montant de R&D (en 2023, les montants les plus faibles sont de quelques centaines de milliers d'&euro;). En 2023, on ne trouve pas de montant de R&D inférieur à 5 millions d'&euro; pour les &Eacute;tats-Unis, 2 millions pour la France, 35 millions pour la Chine, etc. Ces montants minimums ne sont pas fixés *a priori*. Les entreprises sont sélectionnées sur la base du rang qu'elles occupent dans la distribution des dépenses de R&D. Les entreprises sont classées par ordre de niveau de R&D croissant, puis ne sont retenues que les $n$ dernières ($n=1000$ en ce qui concerne l'Europe, mais $n=1500$ pour les entreprises non-européennes). Le <ins>défaut de couverture</ins> des petites entreprises est donc important. Pour plus de détails, voir le fichier sur le [défaut de couverture dans le *Scoreboard*](rd_scoreboard_selection.md).
 
 - De grandes entreprises peuvent être exclues. En effet, lorsque l'on a affaire à un groupe d'entreprises, le montant de R&D reporté est celui consolidé par la *tête de groupe* (la maison mère). Les filiales du groupe et leurs dépenses, quelle que soit la taille de ces filiales, ne sont pas incluses (sauf quand l'information du montant de R&D consolidé par la tête n'est pas disponible).
 
