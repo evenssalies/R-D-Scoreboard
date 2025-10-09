@@ -1,34 +1,28 @@
 /* RTP2025
 	
-	Evolution de la part de la R&D des pays appartenant au top 10 % des
-	investisseurs en R&D.
+	Stata Code for:
 
- Evens Salies,
-				v4 04/2025
+	Salies, E., 2025, Section 6 - La compétitivité hors coût, Code & Data,
+	in Bock, S., Elewa, A., Nesta, L., Salies, E., 2025, Rapport de l’OFCE
+	sur le tissu productif, OFCE, 139 p.
 	
-*/
+ Evens Salies,
+	v4 04/2025 */
 
 cls
 set more off
 
-global	GDRIVE="G:\.shortcut-targets-by-id\1HfSmUOZCFEUwi-aWTtOmVrEeyJrgRxlc\"
-global	URL="$GDRIVE"+"RTP 2025\"
-global	PATHIN="$URL"+"Indiv\Evens\"
-cd		"$PATHIN"
-global	PATHOUT="$PATHIN"+"Output\"
-
-local	FILEIN="`PATHIN'"+"scoreboard_panel.dta"
-use		"`FILEIN'", clear
-
-/*
 /*******************************************
 * Part du Scoreboard dans la DIRDE en 2019 *
 ********************************************/
+
+use				"datasets/scoreboard_panel.dta", clear
+
 keep if 		YEAR==2019
 drop			YEAR
 rename			COUNTRY english
 drop if			english==""
-merge m:1		english using "http://www.evens-salies.com/countries.dta", ///
+merge m:1		english using "datasets/countries.dta", ///
 				keepusing(english ue27_2020 alpha2)
 drop if			_merge!=3
 drop			_merge
@@ -42,10 +36,9 @@ su				RDINV
 local			NUM=r(mean)*r(N)
 keep			alpha2
 duplicates drop
-save			"temp1.dta", replace
+save			"temp1.dta", replace	/* Set your output path ... */
 
-local			FILEIN="$URL"+"Indiv\Evens\"+"rd_e_gerdfund.dta"
-use				"`FILEIN'", clear
+use				"datasets/rd_e_gerdfund.dta", clear
 keep			alpha2 YEAR RD_COU_BES_TOTAL
 rename			RD_COU_BES_TOTAL Y
 keep if 		YEAR==2019
@@ -61,7 +54,7 @@ local			DEN=r(mean)*r(N)
 di				100*`NUM'/`DEN'
 
 use				"temp2.dta", clear
-merge m:1		alpha2 using "http://www.evens-salies.com/countries.dta", ///
+merge m:1		alpha2 using "datasets/countries.dta", ///
 				keepusing(ue27_2020) keep(3)
 replace			ue27_2020=0 if ue27_2020==. 
 keep if			ue27_2020==1
@@ -74,13 +67,14 @@ use				"temp2.dta", clear
 merge 1:1 		alpha2 using "temp1.dta", keep(3)
 su				Y
 local			DEN=r(mean)*r(N)
-di				100*`NUM'/`DEN'
-*/			
+di				100*`NUM'/`DEN'	
 
 /******************************************
 * Top 10% des entreprises US en 2003 2023 *
 *******************************************/
-/*
+
+use				"datasets/scoreboard_panel.dta", clear
+
 /*	On garde 2003 et 2023 */
 keep if			YEAR==2003|YEAR==2023
 
@@ -132,13 +126,14 @@ local			TOTAL=r(sum)
 display			`TOTAL'
 drop			TAG
 total			RDINV if YEAR==2003
-display			37260.5/83730.4
-*/
+display			37260.5/83730.4		/* Your numbers may be slightly difference */
 
 /*****************************************************************
 * Top 10 des entreprises en 2003 et 2023 dans 5 régions du monde *
 ******************************************************************/
-/*
+
+use				"datasets/scoreboard_panel.dta", clear
+
 /*	On garde 2003 et 2023 */
 keep if			YEAR==2003|YEAR==2023
 
@@ -149,7 +144,7 @@ replace			COUNTRY="ChinaexceptHongKong" if COUNTRY=="China"
 /*	Tague l'UE */ 
 rename			COUNTRY english
 drop if			english==""
-merge m:1		english using "http://www.frequency.fr/countries.dta", ///
+merge m:1		english using "datasets/countries.dta", ///
 				keepusing(english ue27_2020 alpha2)
 drop if			_merge!=3
 drop			_merge
@@ -269,12 +264,13 @@ merge 1:1		TEMP2 using "tempfile_5", nogenerate
 drop			TEMP2
 cls
 list			, compress noobs table string(10)
-*/
 
 /*****************************************************************************
 * Entreprises du top20, avec leur secteur en 2003 et 2023, dans cinq régions *
 *	 BRICS (hors CHN), CHN, JP UE-27, USA									 *
 ******************************************************************************/
+
+use				"datasets/scoreboard_panel.dta", clear
 
 /*	2003, 2023 */
 keep if			YEAR==2003|YEAR==2023
@@ -283,7 +279,7 @@ drop			COUNTRY
 /*	Tague l'UE */
 replace			alpha2="CN_X_HK" if alpha2=="CN"
 *replace			alpha2="UK" if alpha2=="GB"	// PLUS LA PEINE
-merge m:1		alpha2 using "http://www.frequency.fr/countries.dta", ///
+merge m:1		alpha2 using "datasets/countries.dta", ///
 				keepusing(english ue27_2020 alpha2)
 drop if			_merge!=3
 drop			_merge
@@ -453,14 +449,14 @@ erase			"filetemp1.dta"
 erase			"filetemp2.dta"
 cd				"$PATHOUT"
 save			"filetemp.dta", replace
-*/
 
-/*
 /***************************************************************************
 *  Chaque année, ne garder que les 10 % des plus grosses en termes de R&D  *
 ****************************************************************************/
 
-*drop if			RDINV==.
+use				"datasets/scoreboard_panel.dta", clear
+
+drop if			RDINV==.
 
 /*	Trier chaque année la R&D par ordre décroissant */
 gsort			YEAR -RDINV
@@ -528,7 +524,7 @@ label variable	RAT "Part (%)"
 		inférierure à 1 %. J'utilise un autre critère de sélection. */
 rename			COUNTRY english
 replace			english="ChinaexceptHongKong" if english=="China"
-merge m:1		english using "http://www.frequency.fr/countries.dta", ///
+merge m:1		english using "datasets/countries.dta", ///
 				keepusing(ue27_2020 francais alpha2)
 drop if			_merge!=3
 drop			_merge english
@@ -597,17 +593,15 @@ xtline			RAT, overlay ///
 					plot3(lcolor(eltblue)) ///
 					plot4(lcolor(cranberry)) ///
 					addplot(tsline TOTALRAT, lcolor(grey%60) lpattern(dash))
-s
-cd				"`PATHOUT'"
 graph export 	"rd_scoreboard_1224.png", width(800) height(600) replace
 graph export 	"rd_scoreboard_1224.pdf", replace
 graph export 	"rd_scoreboard_1224.svg", replace
-*/
 
-/*
 /*****************************************************
 *  Distributions des dépenses de R&D en 2003 et 2023 *
 ******************************************************/
+
+use				"datasets/scoreboard_panel.dta", clear
 
 drop			RAISON NACEREV2_42* REGION COUNTRY
 drop if			RDINV==.
@@ -686,5 +680,5 @@ twoway			(hist TEMP6 if YEAR==2003, bin(20) percent ///
 	
 count if		TEMP5>=100&TEMP5<=1000&YEAR==2003
 count if		TEMP5>=100&TEMP5<=1000&YEAR==2023
-by YEAR, sort: su TEMP5, d	
-*/
+by 				YEAR, ///
+	sort: su 	TEMP5, d
