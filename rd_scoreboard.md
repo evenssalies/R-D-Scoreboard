@@ -17,7 +17,7 @@ Toutefois, si l'on se place au niveau d'agrégation mondial, le financement tota
 
 - Parmi les entreprises sélectionnées, on constate une concentration de la R&D dans les derniers déciles, notamment parce qu'ils incluent les têtes de groupes : en 2023, le top 10 % représente 69,7 % (785 milliards d'&euro;).
 
-Pour l'année 2019, on 986,6 milliards d'&euro; dans Eurostat et 962,1 milliards d'&euro; courants dans le *Scoreboard*, soit un taux de couverture des dépenses de 97,5 %.
+Pour l'année 2019, on 986,6 milliards d'&euro; dans Eurostat et 962,1 milliards d'&euro; courants dans le *Scoreboard*, soit un <ins> taux de couverture des dépenses de 97,5 % </ins>.
 
 ### Producteur de la base *Scoreboard*
 
