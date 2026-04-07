@@ -1,0 +1,1 @@
+scoreboard_panel.do scoreboard_panel_a88_nacerev2.doscoreboard_panel_capitalstock.doscoreboard_panel_country.doscoreboard_panel_deflator.doscoreboard_panel_empl.doscoreboard_panel_firmname.doscoreboard_panel_icb.doscoreboard_panel_imputation.doscoreboard_panel_productivity.doscoreboard_panel_rd_b-index.doscoreboard_panel_rdstock.do
