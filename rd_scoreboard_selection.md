@@ -1,6 +1,6 @@
 ## Sélection des entreprises dans le *Scoreboard*
 
-$n$
+... *en construction*
 
 C'est un problème de non-réponse.
 
