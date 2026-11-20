@@ -1,17 +1,12 @@
 """B-index of R&D tax subsidies by country and year.
 
-Python version of lines 1-52 of project/scoreboard_panel_rd_b-index.do (Evens Salies, 01/2025).
+1. Read the OECD R&D implied tax incentives table (CSV).
+2. B-index = 1 - implied tax subsidy rate, for SMEs (PME) under the loss (L) scenario.
+3. Plots the series of FR, DE, CN (CN_X_HK) and US to a PNG file.
 
-1. Read the OECD R&D tax incentives table (sheet 2b, header on row 6).
-2. Keep the countries and years used, one row per country-year.
-3. B-index = 1 - implied tax subsidy rate, for large firms (GE) and SMEs (PME),
-   under the loss (L) and profit (P) scenarios.
-4. Add the ISO alpha-2 code.
+Requires pandas and matplotlib.
 
-Also plots the series of FR, DE, CN (CN_X_HK) and US to PNG files: all four B-index
-variants, and BI_L_PME alone.
-
-Requires pandas, matplotlib and openpyxl (to read the .xlsx file).
+Evens Salies, 11/2026, v1.
 """
 
 import math
@@ -19,13 +14,12 @@ from pathlib import Path
 
 import matplotlib.pyplot as plt
 import pandas as pd
-from matplotlib.ticker import FuncFormatter, MaxNLocator
+from matplotlib.ticker import FuncFormatter
 
 # Jost is used when it is installed; otherwise matplotlib falls back to DejaVu Sans.
 plt.rcParams["font.family"] = ["Jost", "DejaVu Sans"]
 
 DATA_DIR = Path(__file__).resolve().parent.parent / "datasets"
-OUT_FILE = Path(__file__).resolve().parent / "b-index_timeseries.png"
 OUT_FILE_L_PME = Path(__file__).resolve().parent / "b-index_BI_L_PME.png"
 
 # OECD table of implied tax subsidy rates, 2000-2025 (CSV, one sheet)
@@ -50,47 +44,6 @@ COUNTRY_COLORS = {
     "US": "brown",
 }
 
-# (profit scenario, firm size) -> B-index column
-BI_COLUMNS = {
-    ("Loss", "Large"): "BI_L_GE",
-    ("Loss", "SME"): "BI_L_PME",
-    ("Profit", "Large"): "BI_P_GE",
-    ("Profit", "SME"): "BI_P_PME",
-}
-
-
-def build_bindex(data_dir=DATA_DIR):
-    # Columns A-F hold the data; the header is on row 6 (Stata: cellrange(A6), drop in 1).
-    raw = pd.read_excel(
-        data_dir / "OECD_RDTAX_DB2023_2.xlsx",
-        sheet_name="2b_RDTAXSUB_Data",
-        header=5,
-        usecols="A:F",
-    )
-    raw.columns = ["alpha3", "english", "YEAR", "SIZE", "PROFIT", "TEMP"]
-
-    # Drop the EU and OECD aggregates.
-    rates = raw[~raw["english"].isin(["EU", "OECD"])].copy()
-    rates["YEAR"] = pd.to_numeric(rates["YEAR"])
-    rates["TEMP"] = pd.to_numeric(rates["TEMP"])
-
-    # One row per country-year. A duplicate country-year-size-profit row raises an error,
-    # as the Stata reshape does.
-    wide = rates.pivot(
-        index=["alpha3", "english", "YEAR"],
-        columns=["PROFIT", "SIZE"],
-        values="TEMP",
-    )
-    bi = pd.DataFrame({name: 1 - wide[key] for key, name in BI_COLUMNS.items()}).reset_index()
-    bi = bi[bi["YEAR"].between(2003, 2023)]
-
-    # Keep the countries found in countries.dta (Stata: merge m:1, keep if _merge==3).
-    countries = pd.read_stata(data_dir / "countries.dta", convert_categoricals=False)
-    bi = bi.merge(countries[["alpha3", "alpha2"]], on="alpha3", how="inner", validate="many_to_one")
-    bi.loc[bi["alpha2"] == "GB", "alpha2"] = "UK"  # the panel uses UK
-
-    return bi.drop(columns=["alpha3", "english"])
-
 
 def build_sample(csv_file=OECD_CSV):
     """BI_L_PME for SMEs with loss-making profits, the four countries of the graphs, 2000-2025."""
@@ -107,26 +60,6 @@ def build_sample(csv_file=OECD_CSV):
         "BI_L_PME": 1 - rows["OBS_VALUE"],  # B-index = 1 - implied tax subsidy rate
     })
     return sample.sort_values(["alpha2", "YEAR"]).reset_index(drop=True)
-
-
-def plot_timeseries(bindex, countries=("FR", "DE", "CN_X_HK", "US"), out_file=OUT_FILE):
-    """One panel per B-index variant, one line per country, over time."""
-    fig, axes = plt.subplots(2, 2, figsize=(11, 8), sharex=True)
-    for ax, name in zip(axes.flat, BI_COLUMNS.values()):
-        for code in countries:
-            series = bindex[bindex["alpha2"] == code].sort_values("YEAR")
-            ax.plot(series["YEAR"], series[name], marker="o", markersize=3, label=COUNTRY_NAMES[code], color=COUNTRY_COLORS[code])
-        ax.set_title(name)
-        ax.xaxis.set_major_locator(MaxNLocator(integer=True))
-        ax.grid(alpha=0.3)
-    for ax in axes[1]:
-        ax.set_xlabel("Year")
-    axes[0, 0].legend()
-    fig.suptitle("B-index of R&D tax subsidies, 2003-2023")
-    fig.tight_layout()
-    fig.savefig(out_file, dpi=150)
-    plt.close(fig)
-    return out_file
 
 
 def plot_bi_l_pme(bindex, countries=("FR", "DE", "CN_X_HK", "US"), out_file=OUT_FILE_L_PME):
@@ -166,10 +99,6 @@ def plot_bi_l_pme(bindex, countries=("FR", "DE", "CN_X_HK", "US"), out_file=OUT_
 
 
 if __name__ == "__main__":
-    bindex = build_bindex()
-    print(bindex.shape)
-    print(bindex)
-    #print("Graph saved to", plot_timeseries(bindex))
     sample = build_sample()
     print(sample.shape)
     print("Graph saved to", plot_bi_l_pme(sample))
