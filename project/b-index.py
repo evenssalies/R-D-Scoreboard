@@ -18,8 +18,8 @@ from matplotlib.ticker import FuncFormatter
 # Jost is used when it is installed; otherwise matplotlib falls back to DejaVu Sans.
 plt.rcParams["font.family"] = ["Jost", "DejaVu Sans"]
 
-# OECD table of implied tax subsidy rates, 2000-2025 (CSV, on the feat/bindex-oecd-graph branch)
-OECD_CSV = "https://raw.githubusercontent.com/evenssalies/R-D-Scoreboard/feat/bindex-oecd-graph/datasets/OECD.STI.STP%2CDSD_RDTAX%40DF_RDSUB%2C1.0%2Ccomplete%2C2026-11-20%2015-19-26.csv"
+# OECD table of implied tax subsidy rates, 2000-2025 (CSV, on the main branch)
+OECD_CSV = "https://raw.githubusercontent.com/evenssalies/R-D-Scoreboard/main/datasets/OECD.STI.STP%2CDSD_RDTAX%40DF_RDSUB%2C1.0%2Ccomplete%2C2026-11-20%2015-19-26.csv"
 
 # OECD area code -> alpha-2 code used in the graphs (CHN is taken as China excluding Hong Kong)
 SAMPLE_AREAS = {"FRA": "FR", "DEU": "DE", "CHN": "CN_X_HK", "USA": "US"}
