@@ -1,8 +1,8 @@
 """B-index of R&D tax subsidies by country and year.
 
-1. Read the OECD R&D implied tax incentives table (CSV).
+1. Read the OECD R&D implied tax incentives table (CSV, from GitHub).
 2. B-index = 1 - implied tax subsidy rate, for SMEs (PME) under the loss (L) scenario.
-3. Plots the series of FR, DE, CN (CN_X_HK) and US to a PNG file.
+3. Shows the graph of the series of FR, DE, CN (CN_X_HK) and US.
 
 Requires pandas and matplotlib.
 
@@ -10,7 +10,6 @@ Evens Salies, 11/2026, v1.
 """
 
 import math
-from pathlib import Path
 
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -19,11 +18,8 @@ from matplotlib.ticker import FuncFormatter
 # Jost is used when it is installed; otherwise matplotlib falls back to DejaVu Sans.
 plt.rcParams["font.family"] = ["Jost", "DejaVu Sans"]
 
-DATA_DIR = Path(__file__).resolve().parent.parent / "datasets"
-OUT_FILE_L_PME = Path(__file__).resolve().parent / "b-index_BI_L_PME.png"
-
-# OECD table of implied tax subsidy rates, 2000-2025 (CSV, one sheet)
-OECD_CSV = DATA_DIR / "OECD.STI.STP,DSD_RDTAX@DF_RDSUB,1.0,complete,2026-11-20 15-19-26.csv"
+# OECD table of implied tax subsidy rates, 2000-2025 (CSV, on the feat/bindex-oecd-graph branch)
+OECD_CSV = "https://raw.githubusercontent.com/evenssalies/R-D-Scoreboard/feat/bindex-oecd-graph/datasets/OECD.STI.STP%2CDSD_RDTAX%40DF_RDSUB%2C1.0%2Ccomplete%2C2026-11-20%2015-19-26.csv"
 
 # OECD area code -> alpha-2 code used in the graphs (CHN is taken as China excluding Hong Kong)
 SAMPLE_AREAS = {"FRA": "FR", "DEU": "DE", "CHN": "CN_X_HK", "USA": "US"}
@@ -62,7 +58,7 @@ def build_sample(csv_file=OECD_CSV):
     return sample.sort_values(["alpha2", "YEAR"]).reset_index(drop=True)
 
 
-def plot_bi_l_pme(bindex, countries=("FR", "DE", "CN_X_HK", "US"), out_file=OUT_FILE_L_PME):
+def plot_bi_l_pme(bindex, countries=("FR", "DE", "CN_X_HK", "US")):
     """BI_L_PME alone (SMEs, loss scenario), one line per country, over time."""
     fig, ax = plt.subplots(figsize=(9, 5))
     for code in countries:
@@ -92,13 +88,11 @@ def plot_bi_l_pme(bindex, countries=("FR", "DE", "CN_X_HK", "US"), out_file=OUT_
     for spine in ax.spines.values():
         spine.set_visible(False)  # no frame, so the names at the right edge do not cross a line
     fig.text(0.01, 0.01, "Coût pour une PME qui viendrait s'installe en France et ne dégagerait pas de chiffre d'affaires.", fontsize=8, ha="left", va="bottom")
-    fig.tight_layout(rect=(0, 0.05, 1, 1))  # room for the footnote
-    fig.savefig(out_file, dpi=150, bbox_inches="tight")  # keeps the names at the right edge
-    plt.close(fig)
-    return out_file
+    fig.tight_layout(rect=(0, 0.05, 1, 1))  # room for the footnote and the names at the right edge
+    plt.show()
 
 
 if __name__ == "__main__":
     sample = build_sample()
     print(sample.shape)
-    print("Graph saved to", plot_bi_l_pme(sample))
+    plot_bi_l_pme(sample)
